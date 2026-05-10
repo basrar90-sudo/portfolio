@@ -359,20 +359,5 @@ function formatDate(date) {
 
 console.log('%cWelcome to Asrar Bhat\'s Portfolio!', 'color: #6366f1; font-size: 20px; font-weight: bold;');
 console.log('%cFeel free to explore the code on GitHub!', 'color: #8b5cf6; font-size: 14px;');
-emailjs.init({
-  publicKey: "T5ra11dzPHbqdsCal"
-});
 
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-  e.preventDefault();
 
-  emailjs.sendForm("service_6appa4j", "template_y6temgk", this)
-    .then(function() {
-      alert("Message sent successfully!");
-      document.getElementById("contactForm").reset();
-    })
-    .catch(function(error) {
-      alert("Failed to send message.");
-      console.log(error);
-    });
-});
