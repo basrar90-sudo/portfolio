@@ -27,12 +27,10 @@ document.querySelectorAll('.nav-link').forEach(link => {
 
 const navbar = document.querySelector('.navbar');
 window.addEventListener('scroll', () => {
-    if (navbar) {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
     }
 });
 
@@ -43,18 +41,14 @@ window.addEventListener('scroll', () => {
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-}
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
 
 function closeMenu() {
-    if (hamburger && navMenu) {
-        hamburger.classList.remove('active');
-        navMenu.classList.remove('active');
-    }
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
 }
 
 // Close menu when clicking outside
@@ -82,84 +76,61 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements
-document.querySelectorAll('.skill-progress, .project-card').forEach(el => {
+// Observe skill progress bars
+document.querySelectorAll('.skill-progress').forEach(el => {
     observer.observe(el);
 });
+
+// Observe project cards
+document.querySelectorAll('.project-card').forEach(el => {
+    observer.observe(el);
+});
+
+// =====================
+// CONTACT FORM HANDLING
+// =====================
 
 // =====================
 // CONTACT FORM HANDLING WITH EMAILJS
 // =====================
 
-// Initialize EmailJS
 emailjs.init({
     publicKey: "T5ra11dzPHbqdsCal"
 });
 
-const contactForm = document.getElementById('contactForm');
-const formMessage = document.getElementById('formMessage');
+const contactForm = document.getElementById("contactForm");
+const formMessage = document.getElementById("formMessage");
 
 if (contactForm) {
-    contactForm.addEventListener('submit', function (e) {
+    contactForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        // Validate fields
-        const name = document.getElementById('name')?.value.trim();
-        const email = document.getElementById('email')?.value.trim();
-        const subject = document.getElementById('subject')?.value.trim();
-        const message = document.getElementById('message')?.value.trim();
+        const submitBtn = contactForm.querySelector(".btn-submit");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
 
-        if (!name || !email || !subject || !message) {
-            showFormMessage('Please fill in all fields.', 'error');
-            return;
-        }
-
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showFormMessage('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        // Disable button
-        const submitBtn = contactForm.querySelector('.btn-submit');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-        }
-
-        // Send email using EmailJS
-        emailjs.sendForm(
-            "service_6appa4j",
-            "template_y6temgk",
-            contactForm
-        )
-        .then(function () {
-            showFormMessage('✓ Message sent successfully! I will get back to you soon.', 'success');
-            contactForm.reset();
-        })
-        .catch(function (error) {
-            showFormMessage('✗ Failed to send message. Please try again.', 'error');
-            console.error('EmailJS Error:', error);
-        })
-        .finally(function () {
-            if (submitBtn) {
+        emailjs.sendForm("service_6appa4j", "template_y6temgk", contactForm)
+            .then(function () {
+                showFormMessage("✓ Message sent successfully!", "success");
+                contactForm.reset();
+            })
+            .catch(function (error) {
+                showFormMessage("✗ Failed to send message. Check EmailJS setup.", "error");
+                console.log("EmailJS Error:", error);
+            })
+            .finally(function () {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Message';
-            }
-        });
+                submitBtn.textContent = "Send Message";
+            });
     });
 }
 
 function showFormMessage(message, type) {
-    if (!formMessage) return;
-
     formMessage.textContent = message;
     formMessage.className = `form-message ${type}`;
 
     setTimeout(() => {
-        formMessage.className = 'form-message';
-        formMessage.textContent = '';
+        formMessage.className = "form-message";
     }, 5000);
 }
 
@@ -168,7 +139,81 @@ function showFormMessage(message, type) {
 // =====================
 
 function downloadResume() {
-    window.open('resume.pdf', '_blank');
+    // Create a simple text file content
+    const resumeContent = `
+ASRAR BHAT
+Computer Science Student | Kashmir University
+
+CONTACT INFORMATION
+Email: asrar@example.com
+Phone: +91 9876 543 210
+Location: Kashmir, India
+GitHub: https://github.com
+LinkedIn: https://linkedin.com
+
+EDUCATION
+Bachelor of Technology in Computer Science & Engineering
+Kashmir University
+Graduation: 2026
+
+SKILLS
+Programming Languages: Python, Java, C++, JavaScript
+Web Technologies: HTML, CSS, React.js, Node.js
+Database: SQL, SQLite
+Tools: Git, GitHub, VS Code, Linux
+
+PROJECTS
+1. Portfolio Website
+   - Responsive personal portfolio with smooth animations
+   - Built with HTML, CSS, and JavaScript
+   
+2. Todo Application
+   - Feature-rich todo app with local storage
+   - Built with React.js
+
+3. Calculator App
+   - Fully functional calculator application
+   - Built with vanilla JavaScript
+
+4. Weather App
+   - Real-time weather data using OpenWeather API
+   - Responsive design
+
+5. Student Management System
+   - Database project using Python and SQLite
+   - CRUD operations implementation
+
+6. Data Structures Visualizer
+   - Interactive visualization of data structures
+   - Built with JavaScript Canvas API
+
+EXPERIENCE & ACHIEVEMENTS
+- Strong foundation in Data Structures and Algorithms
+- Experienced in problem-solving and coding
+- Contributed to open-source projects
+- Participated in coding competitions
+
+ABOUT
+Passionate Computer Science student dedicated to building innovative solutions and exploring cutting-edge technologies. 
+Strong problem-solving skills with a focus on writing clean, efficient code.
+`;
+
+    // Create blob from content
+    const blob = new Blob([resumeContent], { type: 'text/plain' });
+
+    // Create download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Asrar_Bhat_Resume.txt';
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+
+    console.log('Resume downloaded');
 }
 
 // =====================
@@ -176,7 +221,8 @@ function downloadResume() {
 // =====================
 
 document.querySelectorAll('.btn').forEach(button => {
-    button.addEventListener('click', function (event) {
+    button.addEventListener('click', function(event) {
+        // Create ripple effect
         const ripple = document.createElement('span');
         const rect = this.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
@@ -192,6 +238,42 @@ document.querySelectorAll('.btn').forEach(button => {
 
         setTimeout(() => ripple.remove(), 600);
     });
+});
+
+// =====================
+// TYPING ANIMATION FOR HERO TITLE
+// =====================
+
+function typeAnimation(element, text, speed = 100) {
+    let index = 0;
+    element.textContent = '';
+
+    function type() {
+        if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            setTimeout(type, speed);
+        }
+    }
+
+    type();
+}
+
+// Run typing animation when page loads
+window.addEventListener('load', () => {
+    // Optional: Uncomment to enable typing animation
+    // const heroTitle = document.querySelector('.hero-title');
+    // typeAnimation(heroTitle, 'Hi, I\'m Asrar Bhat', 50);
+});
+
+// =====================
+// SCROLL PROGRESS INDICATOR
+// =====================
+
+window.addEventListener('scroll', () => {
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (window.scrollY / scrollHeight) * 100;
+    // Can be used to display progress bar
 });
 
 // =====================
@@ -215,25 +297,62 @@ window.addEventListener('scroll', () => {
 
     document.querySelectorAll('section').forEach(section => {
         const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
 
-        if (window.pageYOffset >= sectionTop - 200) {
+        if (pageYOffset >= sectionTop - 200) {
             current = section.getAttribute('id');
         }
     });
 
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
-
-        const href = link.getAttribute('href');
-        if (href && href.startsWith('#') && href.substring(1) === current) {
+        if (link.getAttribute('href').substring(1) === current) {
             link.classList.add('active');
         }
     });
 });
 
 // =====================
+// UTILITY FUNCTIONS
+// =====================
+
+// Function to check if element is in viewport
+function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+// Function to format date
+function formatDate(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString(undefined, options);
+}
+
+// =====================
 // CONSOLE MESSAGE
 // =====================
 
-console.log('%cWelcome to Asrar Bhat\\'s Portfolio!', 'color: #6366f1; font-size: 20px; font-weight: bold;');
+console.log('%cWelcome to Asrar Bhat\'s Portfolio!', 'color: #6366f1; font-size: 20px; font-weight: bold;');
 console.log('%cFeel free to explore the code on GitHub!', 'color: #8b5cf6; font-size: 14px;');
+emailjs.init({
+  publicKey: "T5ra11dzPHbqdsCal"
+});
+
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  emailjs.sendForm("service_6appa4j", "template_y6temgk", this)
+    .then(function() {
+      alert("Message sent successfully!");
+      document.getElementById("contactForm").reset();
+    })
+    .catch(function(error) {
+      alert("Failed to send message.");
+      console.log(error);
+    });
+});
