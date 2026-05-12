@@ -14,6 +14,7 @@
     --transition: all 0.3s ease;
 }
 
+
 /* ===================== GENERAL STYLES ===================== */
 * {
     margin: 0;
@@ -256,6 +257,19 @@ a:hover {
     gap: 0.5rem;
     position: relative;
     overflow: hidden;
+}
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 500px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 160px; /* Added fixed width */
+    font-weight: 600; /* Keeps boldness consistent */
+    transition: var(--transition);
 }
 
 .btn-primary {
